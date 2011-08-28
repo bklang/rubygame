@@ -6,61 +6,21 @@
 
 # The version number for Rubygame.
 # If you update this, also update lib/rubygame/main.rb.
-RUBYGAME_VERSION = [2,6,4]
-
-
 
 require 'rubygems'
-
 require 'rake'
-require 'rake/gempackagetask'
+require 'rubygems/package_task'
 require 'rake/rdoctask'
+$:.push File.dirname(__FILE__)
+require 'lib/rubygame/main.rb'
+gem_spec = eval File.read('rubygame.gemspec')
 
 require "rbconfig"
 include Config
 
-
-
-#######
-# GEM #
-#######
-
-gem_spec = Gem::Specification.new do |s|
-  s.name     = "rubygame"
-  s.version  = RUBYGAME_VERSION.join(".")
-  s.author   = "John Croisant"
-  s.email    = "jacius@gmail.com"
-  s.homepage = "http://rubygame.org/"
-  s.summary  = "Clean and powerful library for game programming"
-  s.rubyforge_project = "rubygame"
-
-  s.files = FileList.new do |fl|
-    fl.include("{lib,samples,doc}/**/*")
-  end
-
-  s.require_paths = ["lib"]
-
-  s.has_rdoc = true
-  s.extra_rdoc_files = FileList.new do |fl|
-    fl.include "doc/*.rdoc", "./*.rdoc", "LICENSE.txt"
-  end
-
-  s.required_ruby_version = ">= 1.8"
-  s.add_dependency( "rake", ">=0.7.0" )
-  s.add_dependency( "ruby-sdl-ffi", ">=0.4.0" )
-  s.requirements = ["SDL       >= 1.2.7",
-                    "SDL_gfx   >= 2.0.10 (optional)",
-                    "SDL_image >= 1.2.3  (optional)",
-                    "SDL_mixer >= 1.2.7  (optional)",
-                    "SDL_ttf   >= 2.0.6  (optional)"]
-
-end
-
-
-Rake::GemPackageTask.new(gem_spec) do |pkg| 
+Gem::PackageTask.new(gem_spec) do |pkg|
   pkg.need_tar_bz2 = true
 end
-
 
 
 ########
@@ -69,7 +29,7 @@ end
 
 Rake::RDocTask.new do |rd|
   rd.main = "README.rdoc"
-  rd.title = "Rubygame #{RUBYGAME_VERSION.join(".")} Docs"
+  rd.title = "Rubygame #{Rubygame::VERSIONS[:rubygame].join(".")} Docs"
   rd.rdoc_files.include("lib/rubygame/**/*.rb",
                         "doc/*.rdoc",
                         "./*.rdoc",
